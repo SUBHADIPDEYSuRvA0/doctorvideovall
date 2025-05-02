@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>Welcome, <%= user.name %></h1>
+    <p>This is your dashboard. You can start or join meetings from here.</p>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Start a New Meeting</h5>
+        <p class="card-text">Create a new meeting and invite others to join.</p>
+        <a href="/meetings/new" class="btn btn-primary">Start Meeting</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Join a Meeting</h5>
+        <p class="card-text">Enter a meeting ID to join an existing meeting.</p>
+        <a href="/meetings/join" class="btn btn-primary">Join Meeting</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Recent Meetings</h5>
+      </div>
+      <div class="card-body">
+        <a href="/meetings" class="btn btn-outline-primary mb-3">View All Meetings</a>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="recent-meetings">
+              <!-- This will be populated via AJAX -->
+              <tr>
+                <td colspan="4" class="text-center">Loading recent meetings...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Fetch recent meetings
+  document.addEventListener('DOMContentLoaded', function() {
+    fetch('/meetings/recent')
+      .then(response => response.json())
+      .then(data => {
+        const tbody = document.getElementById('recent-meetings');
+        tbody.innerHTML = '';
+        
+        if (data.meetings.length === 0) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = '<td colspan="4" class="text-center">No recent meetings found</td>';
+          tbody.appendChild(tr);
+          return;
+        }
+        
+        data.meetings.forEach(meeting => {
+          const tr = document.createElement('tr');
+          
+          const titleTd = document.createElement('td');
+          titleTd.textContent = meeting.title;
+          
+          const dateTd = document.createElement('td');
+          dateTd.textContent = new Date(meeting.startTime).toLocaleString();
+          
+          const statusTd = document.createElement('td');
+          if (meeting.isActive) {
+            statusTd.innerHTML = '<span class="badge bg-success">Active</span>';
+          } else {
+            statusTd.innerHTML = '<span class="badge bg-secondary">Ended</span>';
+          }
+          
+          const actionsTd = document.createElement('td');
+          if (meeting.isActive) {
+            actionsTd.innerHTML = `<a href="/meetings/${meeting.meetingId}" class="btn btn-sm btn-primary">Join</a>`;
+          } else {
+            actionsTd.innerHTML = `<a href="/meetings/${meeting.meetingId}" class="btn btn-sm btn-outline-primary">View</a>`;
+          }
+          
+          tr.appendChild(titleTd);
+          tr.appendChild(dateTd);
+          tr.appendChild(statusTd);
+          tr.appendChild(actionsTd);
+          
+          tbody.appendChild(tr);
+        });
+      })
+      .catch(error => {
+        console.error('Error fetching recent meetings:', error);
+        const tbody = document.getElementById('recent-meetings');
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error loading meetings</td></tr>';
+      });
+  });
+</script>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= meeting.title %> | Video Calling App</title>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/css/meeting-room.css">
+</head>
+<body>
+  <div id="meeting-data" 
+    data-meeting-id="<%= meeting.meetingId %>" 
+    data-user-id="<%= user._id %>" 
+    data-user-name="<%= user.name %>">
+  </div>
+  
+  <div class="meeting-container">
+    <!-- Video Grid -->
+    <div class="video-grid-container">
+      <div id="video-grid"></div>
+    </div>
+    
+    <!-- Chat Panel -->
+    <div id="chat-panel" class="chat-panel hidden">
+      <div class="chat-header">
+        <h3>Chat</h3>
+        <button id="close-chat" class="icon-button">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="chat-messages" class="chat-messages"></div>
+      <form id="chat-form" class="chat-form">
+        <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+        <button type="submit">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </form>
+    </div>
+    
+    <!-- Controls -->
+    <div class="controls">
+      <div class="control-buttons">
+        <button id="toggle-audio" class="control-button">
+          <i class="fas fa-microphone"></i>
+        </button>
+        <button id="toggle-video" class="control-button">
+          <i class="fas fa-video"></i>
+        </button>
+        <button id="toggle-screen-share" class="control-button">
+          <i class="fas fa-desktop"></i>
+        </button>
+        <button id="toggle-chat" class="control-button">
+          <i class="fas fa-comments"></i>
+        </button>
+        <button id="send-reaction" class="control-button">
+          <i class="fas fa-smile"></i>
+        </button>
+        <div id="reaction-menu" class="reaction-menu hidden">
+          <button class="emoji-btn">👍</button>
+          <button class="emoji-btn">👏</button>
+          <button class="emoji-btn">❤️</button>
+          <button class="emoji-btn">😂</button>
+          <button class="emoji-btn">😮</button>
+        </div>
+        <button id="leave-meeting" class="control-button leave-button">
+          <i class="fas fa-phone-slash"></i> Leave
+        </button>
+      </div>
+      
+      <div class="meeting-info">
+        <h3><%= meeting.title %></h3>
+        <p>Meeting ID: <span id="meeting-id"><%= meeting.meetingId %></span></p>
+      </div>
+    </div>
+    
+    <!-- Participants Panel -->
+    <div id="participants-panel" class="participants-panel">
+      <div class="participants-header">
+        <h3>Participants</h3>
+      </div>
+      <ul id="participants-list" class="participants-list"></ul>
+    </div>
+  </div>
+  
+  <!-- Leave Meeting Form -->
+  <form id="leave-form" action="/meetings/<%= meeting.meetingId %>/leave" method="POST" style="display: none;">
+  </form>
+  
+  <!-- Scripts -->
+  <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/meeting-room.js"></script>
+</body>
+</html>

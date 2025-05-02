@@ -1,0 +1,169 @@
+<div class="row mb-4">
+  <div class="col-md-12">
+    <h1>Subadmin Dashboard</h1>
+    <p>Welcome to the subadmin dashboard. Here you can manage your users and meetings.</p>
+  </div>
+</div>
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card stats-card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Your Users</h5>
+            <div class="stats-number"><%= stats.userCount %></div>
+          </div>
+          <div class="stats-icon">
+            <i class="fas fa-users"></i>
+          </div>
+        </div>
+        <a href="/subadmin/users" class="btn btn-sm btn-outline-primary mt-3">Manage Users</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stats-card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Your Meetings</h5>
+            <div class="stats-number"><%= stats.meetingCount %></div>
+          </div>
+          <div class="stats-icon">
+            <i class="fas fa-video"></i>
+          </div>
+        </div>
+        <a href="/subadmin/meetings" class="btn btn-sm btn-outline-primary mt-3">Manage Meetings</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stats-card h-100">
+      <div class="card-body">
+        <div class="d-flex justify-content-between">
+          <div>
+            <h5 class="card-title">Active Meetings</h5>
+            <div class="stats-number"><%= stats.activeMeetings %></div>
+          </div>
+          <div class="stats-icon">
+            <i class="fas fa-play-circle"></i>
+          </div>
+        </div>
+        <a href="/subadmin/meetings?status=active" class="btn btn-sm btn-outline-primary mt-3">View Active</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Users</h5>
+        <a href="/subadmin/users" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Registered</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (recentUsers.length === 0) { %>
+                <tr>
+                  <td colspan="4" class="text-center">No users found</td>
+                </tr>
+              <% } else { %>
+                <% recentUsers.forEach(user => { %>
+                  <tr>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= new Date(user.createdAt).toLocaleDateString() %></td>
+                    <td>
+                      <a href="/subadmin/users/<%= user._id %>/edit" class="btn btn-sm btn-outline-primary">Edit</a>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0">Recent Meetings</h5>
+        <a href="/subadmin/meetings" class="btn btn-sm btn-outline-primary">View All</a>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Host</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (recentMeetings.length === 0) { %>
+                <tr>
+                  <td colspan="4" class="text-center">No meetings found</td>
+                </tr>
+              <% } else { %>
+                <% recentMeetings.forEach(meeting => { %>
+                  <tr>
+                    <td><%= meeting.title %></td>
+                    <td><%= meeting.host.name %></td>
+                    <td><span class="badge bg-<%= meeting.isActive ? 'success' : 'secondary' %>"><%= meeting.isActive ? 'Active' : 'Ended' %></span></td>
+                    <td>
+                      <a href="/subadmin/meetings/<%= meeting.meetingId %>" class="btn btn-sm btn-outline-primary">View</a>
+                    </td>
+                  </tr>
+                <% }); %>
+              <% } %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="mb-0">Quick Actions</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <a href="/subadmin/users/new" class="btn btn-primary w-100">
+              <i class="fas fa-user-plus"></i> Add User
+            </a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a href="/subadmin/meetings/new" class="btn btn-primary w-100">
+              <i class="fas fa-video"></i> Create Meeting
+            </a>
+          </div>
+          <div class="col-md-4 mb-3">
+            <a href="/meetings" class="btn btn-primary w-100">
+              <i class="fas fa-sign-in-alt"></i> Join Meeting
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
